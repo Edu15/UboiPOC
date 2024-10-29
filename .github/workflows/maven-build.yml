@@ -1,29 +1,30 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: Java CI with Maven
+name: Deploy no EC2 - WEB
 
 on:
+  # Runs on pushes targeting the default branch
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ '17' ]
-
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK ${{matrix.java}}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{matrix.java}}
-          distribution: 'adopt'
-          cache: maven
-      - name: Build with Maven Wrapper
-        run: ./mvnw -B package
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        run: |
+            echo "${{secrets.KEY_G}}" >private_key && chmod 600 private_key
+            ssh -o StrictHostkeyChecking=no -i private_key ubuntu@ec2-52-71-72-251.compute-1.amazonaws.com "
+                      cd UboiPOC/  &&
+                      sudo git pull "
