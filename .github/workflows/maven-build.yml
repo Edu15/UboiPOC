@@ -19,8 +19,39 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          echo "${{secrets.KEY_G}}" | tr -d '\r' > private_key
+          # Adicionando a chave SSH diretamente no pipeline
+          echo "-----BEGIN RSA PRIVATE KEY-----
+          MIIEogIBAAKCAQEAroLGGyHta2mALfwiIVK58HHOF/Pg8eNVYSMAukrRMBnLHoZN
+          sO//H3cpGVIprEYzszNl1bvAwJUKy1a4k1TPDviBGlgOZqRVUrKpfqNblcovqQVW
+          ptS8tYLHiUQiZd2vr9Bc+pbJbjLjf4jrgKT2sdkDcaxMQIF+Y6VqAh49LwhybpS+
+          Q8GRR4QAIKm8u5PTn/MSv5+FGU1YCeMas8KpUVb3T6kgi77r1hBljAdS+zWljuWr
+          tAu2+VOL1CSWDy8Q34HK/XarEfP+4F7uX5ZCBcsYIqfUx3PeCQViGbQFjUatifjg
+          5iBgV3lrjU916DIt8hB22/UC9K8HmPqXmQWdiQIDAQABAoIBAAwkbURWB/8BSDnq
+          4TUQXH+ua3ifL3elKbuog9RygDuoj8l/7sfw6v91exaX8O5btB0z5lIIzlCYDjg3
+          wH//1qhkAhejKN1bcdRfOgvlsemqN8a66FyTUM4QW3Hhm8Maua6yAMYu17UjNVEa
+          Zch9seyN/P9bzbJvUCv+xnF/SSKMhn9QrqJdTAsVgNNDWPFy/2PRWJcTbEdeNTiA
+          oTYKpfkIjUUnsRRVArpSVB9rCQeomynyN6e7KM+zEQQtz4qDDsiisjLLBQ8ch3dd
+          3YLLV9pzNsrck6wKewizUcVuF+71yiljDV33nExxnLiQumzvTkb/212iXfZjAzGf
+          VFgHeAECgYEA1h+XDrNJ0WWUeTfioly9URB/6rJLDnilI6LjJq4PVnNpoIemv0BT
+          F9a4LhL3bFPWDwx2/m1VckrXapFo3VPNrqmNrFEAQISbz2ZBxtcQZSlT2xLkjshc
+          tXoIpNLce9gcmziwnKwiaCFsm4dE8zyMNJ+iFj0PscMpGcLijfjwftECgYEA0KPr
+          1gSR41eE3YwGMXSfq389dp/3wXlxmmz1hvXDt0OC/fvUODLToNW9zke0tDNoaXQ1
+          GWfJ/84np5c79j5g3J0rM+xk6KLQLlwsJpkXrdPCnxQQmtiR0iX8JsdMdTajuIoH
+          NrIT2XFzmKjER4R6Ooo6JXox6k1QZQry3+SVkTkCgYBvQHyY67iH7rJlBQ9g8rR+
+          oQcFZ1uuCisrR9+j4j4f2dlgyfpuVjqWIT8S2VHq2+hVa1GMQjxqJM6mFSUaEgfF
+          H1130aJC42OdL/EvIeDn3sAuDDPqp9nbhKtnEBP02MWMNLk2vg0mc29do7vEcYob
+          cXGjAljcMJ1zQBm8UEKMcQKBgFy3u+JL/ZkOF5ls1IO91AcecG37ANsV4QpDSYlE
+          Rkl20wuTkee3jpx23/Z/nypFfiz+22oC2Z24O58acicn6Vug7MYSU3WehO1VQLmW
+          ZxN0e5S+EfL+My80ei2xe6TLN06W6EXCNVf4NuqsdS1jDf5d1yE4gF4jJYsBppUg
+          u+bhAoGAcCkqb2UmBEEbR/NPG1o8wZpe2bxi8Um4owGfjioiLdP4r89QY6kmNOyq
+          3WEq1C0HSa/HVs2Lbc7lCO/RSeL+kT4TnwwNXA4oP9J4NP66sf1Dxlwigib1t3w9
+          tHKn0LQA4So4jQ1V0uqtIsdreu9qT8BRAIGDBWLhpD/5PcSUh2k=
+          -----END RSA PRIVATE KEY-----" > private_key
+          
+          # Modificando permissões da chave
           chmod 600 private_key
+
+          # Conectando ao EC2 e executando comandos
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i private_key ubuntu@ec2-52-71-72-251.compute-1.amazonaws.com "
             cd UboiPOC/ &&
             sudo git pull "
